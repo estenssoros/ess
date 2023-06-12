@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/pem"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -48,9 +47,9 @@ var decryptCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		bs, err := ioutil.ReadFile(decryptInputFile)
+		bs, err := os.ReadFile(decryptInputFile)
 		if err != nil {
-			return errors.Wrap(err, "ioutil.ReadFile")
+			return errors.Wrap(err, "os.ReadFile")
 		}
 		decrypted, err := decrypt(bs, decryptKeyFile)
 		if err != nil {
@@ -67,9 +66,9 @@ var decryptCmd = &cobra.Command{
 }
 
 func decrypt(msg []byte, keyFile string) ([]byte, error) {
-	bs, err := ioutil.ReadFile(keyFile)
+	bs, err := os.ReadFile(keyFile)
 	if err != nil {
-		return nil, errors.Wrap(err, "ioutil.ReadFile")
+		return nil, errors.Wrap(err, "os.ReadFile")
 	}
 	block, _ := pem.Decode(bs)
 	if block == nil {

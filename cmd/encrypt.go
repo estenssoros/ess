@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -47,9 +46,9 @@ var encryptCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		bs, err := ioutil.ReadFile(encryptInputFile)
+		bs, err := os.ReadFile(encryptInputFile)
 		if err != nil {
-			return errors.Wrap(err, "ioutil.ReadFile")
+			return errors.Wrap(err, "os.ReadFile")
 		}
 		encrypted, err := encrypt(bs, encryptKeyFile)
 		if err != nil {
@@ -66,9 +65,9 @@ var encryptCmd = &cobra.Command{
 }
 
 func encrypt(msg []byte, keyFile string) ([]byte, error) {
-	bs, err := ioutil.ReadFile(keyFile)
+	bs, err := os.ReadFile(keyFile)
 	if err != nil {
-		return nil, errors.Wrap(err, "ioutil.ReadFile")
+		return nil, errors.Wrap(err, "os.ReadFile")
 	}
 	parsed, _, _, _, err := ssh.ParseAuthorizedKey(bs)
 	if err != nil {
